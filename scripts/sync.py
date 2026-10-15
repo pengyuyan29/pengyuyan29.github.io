@@ -16,6 +16,7 @@ from urllib.parse import urlparse
 
 OWNER = "pengyuyan29"
 SELF_REPO = f"{OWNER}.github.io"  # 本索引站自身，不收录
+CUSTOM_DOMAIN = "88.202991001.xyz"  # 导航站域名，HTTPS 由 Cloudflare 边缘证书提供，始终可用
 TOKEN = os.environ.get("GH_TOKEN", "")
 UA = "pages-index-sync"
 
@@ -95,6 +96,21 @@ def head_check(url: str):
         return False, url
 
 
+def try_https(url: str) -> str:
+    """把 http:// 链接升级为 https://。自定义域名直接强制升级；
+    其他域名重试探测，确认可用才升级（页面密码加密依赖 HTTPS）。"""
+    if not url.startswith("http://"):
+        return url
+    https_url = "https://" + url[len("http://"):]
+    if urlparse(url).netloc.lower() == CUSTOM_DOMAIN:
+        return https_url
+    for _ in range(3):
+        ok, _ = head_check(https_url)
+        if ok:
+            return https_url
+    return url
+
+
 def build_site(repo: dict, previous: dict) -> dict:
     name = repo["name"]
 
@@ -113,13 +129,9 @@ def build_site(repo: dict, previous: dict) -> dict:
             if not ok3:
                 url = f"https://{github_host}/{name}/"
 
-    # 统一尝试升级为 HTTPS（未开启 Enforce HTTPS 时 Pages API 返回 http://，
+    # 统一升级为 HTTPS（未开启 Enforce HTTPS 时 Pages API 返回 http://，
     # 而页面密码加密依赖 HTTPS 下的 crypto.subtle）
-    if url.startswith("http://"):
-        https_url = "https://" + url[len("http://"):]
-        ok2, _ = head_check(https_url)
-        if ok2:
-            url = https_url
+    url = try_https(url)
 
     ok, _ = head_check(url)
 
@@ -154,7 +166,8 @@ def main() -> None:
     for name, old in previous.items():
         if name not in seen and name != SELF_REPO:
             old = dict(old)
-            ok, _ = head_check(old.get("url", ""))
+            old["url"] = try_https(old.get("url", ""))
+            ok, _ = head_check(old["url"])
             old["status"] = "online" if ok else "offline"
             sites.append(old)
             print(f"  kept from previous data: {name}")
