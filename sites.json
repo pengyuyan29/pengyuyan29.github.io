@@ -1,77 +1,41 @@
 {
-  "updated_at": "2026-10-15T14:13:31Z",
+  "updated_at": "2026-10-15T14:17:16Z",
   "sites": [
     {
-      "repo": "singbox-config-builder",
-      "url": "https://pengyuyan29.github.io/singbox-config-builder/",
-      "description": "sing-box 节点配置生成器：粘贴分享链接自动解析，生成可导入手机 sing-box 的完整配置（页面已加密）",
-      "language": "HTML",
-      "topics": [],
-      "pushed_at": "2026-10-15T05:12:10Z",
-      "status": "online"
-    },
-    {
-      "repo": "blog",
-      "url": "https://pengyuyan29.github.io/blog/",
-      "description": "一隅 · 密码保护的私人技术手记",
-      "language": "JavaScript",
-      "topics": [],
-      "pushed_at": "2026-10-15T04:18:21Z",
-      "status": "online"
-    },
-    {
-      "repo": "resume-editor",
-      "url": "https://pengyuyan29.github.io/resume-editor/",
-      "description": "A4 在线简历编辑器：双模板、浏览器本地保存、PDF 与 HTML 导出",
-      "language": "HTML",
-      "topics": [],
-      "pushed_at": "2026-10-10T15:59:48Z",
-      "status": "online"
-    },
-    {
-      "repo": "opt-808-rx-guide",
-      "url": "https://pengyuyan29.github.io/opt-808-rx-guide/",
-      "description": "激光测距机接收光学系统 Zemax 复现指南 · 808nm + Si APD",
-      "language": "HTML",
-      "topics": [],
-      "pushed_at": "2026-10-10T09:01:31Z",
-      "status": "online"
-    },
-    {
       "repo": "display-tech-intro",
-      "url": "https://pengyuyan29.github.io/display-tech-intro/",
+      "url": "http://88.202991001.xyz/display-tech-intro/",
       "description": "",
       "language": "Python",
       "topics": [],
       "pushed_at": "2026-09-21T15:33:43Z",
-      "status": "online"
+      "status": "offline"
     },
     {
       "repo": "vlog",
-      "url": "https://pengyuyan29.github.io/vlog/",
+      "url": "http://88.202991001.xyz/vlog/",
       "description": "",
       "language": "HTML",
       "topics": [],
       "pushed_at": "2026-07-31T02:26:11Z",
-      "status": "online"
+      "status": "offline"
     },
     {
       "repo": "daily_stock_analysis",
-      "url": "https://pengyuyan29.github.io/daily_stock_analysis/",
+      "url": "http://88.202991001.xyz/daily_stock_analysis/",
       "description": "LLM驱动的 A/H/美股智能分析器，多数据源行情 + 实时新闻 + Gemini 决策仪表盘 + 多渠道推送，零成本，纯白嫖，定时运行",
       "language": "Python",
       "topics": [],
       "pushed_at": "2026-04-10T14:31:10Z",
-      "status": "online"
+      "status": "offline"
     },
     {
       "repo": "Wechat__editer",
-      "url": "https://pengyuyan29.github.io/Wechat__editer/",
+      "url": "http://88.202991001.xyz/Wechat__editer/",
       "description": "一个基于 Vite + React + TypeScript + Tiptap的公众号文章排版工具：左侧写作编辑，右侧手机预览，内置模板/组件/套版，并支持 自定义主题（JSON / CSS 导入） —— 让你能把「自己的品牌色与版式风格」稳定地应用到预览、复制与导出。",
       "language": "TypeScript",
       "topics": [],
       "pushed_at": "2026-02-07T02:47:30Z",
-      "status": "online"
+      "status": "offline"
     },
     {
       "repo": "qingqian.github.io",
@@ -80,7 +44,7 @@
       "language": null,
       "topics": [],
       "pushed_at": "2025-09-29T13:48:19Z",
-      "status": "online"
+      "status": "offline"
     }
   ]
 }
