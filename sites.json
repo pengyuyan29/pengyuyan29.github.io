@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T14:36:02Z",
+  "updated_at": "2026-10-15T14:36:44Z",
   "sites": [
     {
       "repo": "singbox-config-builder",
@@ -39,7 +39,7 @@
     },
     {
       "repo": "display-tech-intro",
-      "url": "http://88.202991001.xyz/display-tech-intro/",
+      "url": "https://88.202991001.xyz/display-tech-intro/",
       "description": "",
       "language": "Python",
       "topics": [],
@@ -48,7 +48,7 @@
     },
     {
       "repo": "vlog",
-      "url": "http://88.202991001.xyz/vlog/",
+      "url": "https://88.202991001.xyz/vlog/",
       "description": "",
       "language": "HTML",
       "topics": [],
@@ -57,7 +57,7 @@
     },
     {
       "repo": "daily_stock_analysis",
-      "url": "http://88.202991001.xyz/daily_stock_analysis/",
+      "url": "https://88.202991001.xyz/daily_stock_analysis/",
       "description": "LLM驱动的 A/H/美股智能分析器，多数据源行情 + 实时新闻 + Gemini 决策仪表盘 + 多渠道推送，零成本，纯白嫖，定时运行",
       "language": "Python",
       "topics": [],
@@ -66,7 +66,7 @@
     },
     {
       "repo": "Wechat__editer",
-      "url": "http://88.202991001.xyz/Wechat__editer/",
+      "url": "https://88.202991001.xyz/Wechat__editer/",
       "description": "一个基于 Vite + React + TypeScript + Tiptap的公众号文章排版工具：左侧写作编辑，右侧手机预览，内置模板/组件/套版，并支持 自定义主题（JSON / CSS 导入） —— 让你能把「自己的品牌色与版式风格」稳定地应用到预览、复制与导出。",
       "language": "TypeScript",
       "topics": [],
