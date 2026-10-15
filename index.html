@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>站点导航 · pengyuyan29</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="description" content="pengyuyan29 的 GitHub Pages 站点索引，每日自动同步">
 <style>
   :root {
@@ -25,6 +26,8 @@
     min-height: 100vh;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 20px 60px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .logo { width: 46px; height: 46px; border-radius: 12px; flex: none; }
   header h1 {
     font-size: 32px; font-weight: 700; letter-spacing: 1px;
     background: linear-gradient(90deg, #6ea8fe, #a6f0e2);
@@ -74,8 +77,13 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>站点导航</h1>
-    <p class="sub">pengyuyan29 的 GitHub Pages 索引 · 每日自动同步</p>
+    <div class="brand">
+      <img class="logo" src="favicon.svg" alt="站点导航">
+      <div>
+        <h1>站点导航</h1>
+        <p class="sub">pengyuyan29 的 GitHub Pages 索引 · 每日自动同步</p>
+      </div>
+    </div>
     <div class="toolbar">
       <input id="search" type="search" placeholder="搜索站点名称或描述…" autocomplete="off">
       <span id="stats"></span>
