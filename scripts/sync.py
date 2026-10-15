@@ -109,13 +109,17 @@ def build_site(repo: dict, previous: dict) -> dict:
         ok, final = head_check(url)
         github_host = f"{OWNER}.github.io"
         if ok and final and urlparse(final).netloc.lower() != github_host:
-            if url.startswith("http://"):
-                https_url = "https://" + url[len("http://"):]
-                ok2, _ = head_check(https_url)
-                url = https_url if ok2 else url
             ok3, _ = head_check(url)
             if not ok3:
                 url = f"https://{github_host}/{name}/"
+
+    # 统一尝试升级为 HTTPS（未开启 Enforce HTTPS 时 Pages API 返回 http://，
+    # 而页面密码加密依赖 HTTPS 下的 crypto.subtle）
+    if url.startswith("http://"):
+        https_url = "https://" + url[len("http://"):]
+        ok2, _ = head_check(https_url)
+        if ok2:
+            url = https_url
 
     ok, _ = head_check(url)
 
