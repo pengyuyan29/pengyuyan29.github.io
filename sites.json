@@ -1,6 +1,42 @@
 {
-  "updated_at": "2026-10-15T14:17:16Z",
+  "updated_at": "2026-10-15T14:21:31Z",
   "sites": [
+    {
+      "repo": "singbox-config-builder",
+      "url": "http://88.202991001.xyz/singbox-config-builder/",
+      "description": "sing-box 节点配置生成器：粘贴分享链接自动解析，生成可导入手机 sing-box 的完整配置（页面已加密）",
+      "language": "HTML",
+      "topics": [],
+      "pushed_at": "2026-10-15T05:12:10Z",
+      "status": "offline"
+    },
+    {
+      "repo": "blog",
+      "url": "http://88.202991001.xyz/blog/",
+      "description": "一隅 · 密码保护的私人技术手记",
+      "language": "JavaScript",
+      "topics": [],
+      "pushed_at": "2026-10-15T04:18:21Z",
+      "status": "offline"
+    },
+    {
+      "repo": "resume-editor",
+      "url": "http://88.202991001.xyz/resume-editor/",
+      "description": "A4 在线简历编辑器：双模板、浏览器本地保存、PDF 与 HTML 导出",
+      "language": "HTML",
+      "topics": [],
+      "pushed_at": "2026-10-10T15:59:48Z",
+      "status": "offline"
+    },
+    {
+      "repo": "opt-808-rx-guide",
+      "url": "http://88.202991001.xyz/opt-808-rx-guide/",
+      "description": "激光测距机接收光学系统 Zemax 复现指南 · 808nm + Si APD",
+      "language": "HTML",
+      "topics": [],
+      "pushed_at": "2026-10-10T09:01:31Z",
+      "status": "offline"
+    },
     {
       "repo": "display-tech-intro",
       "url": "http://88.202991001.xyz/display-tech-intro/",
@@ -44,7 +80,7 @@
       "language": null,
       "topics": [],
       "pushed_at": "2025-09-29T13:48:19Z",
-      "status": "offline"
+      "status": "online"
     }
   ]
 }
