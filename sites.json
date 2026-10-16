@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-10-16T09:19:12Z",
+  "updated_at": "2026-10-16T09:19:40Z",
   "sites": [
+    {
+      "repo": "测试站点",
+      "url": "https://example.com/",
+      "description": "这是一个端到端测试",
+      "language": null,
+      "topics": [],
+      "pushed_at": null,
+      "status": "custom"
+    },
     {
       "repo": "singbox-config-builder",
       "url": "https://88.202991001.xyz/singbox-config-builder/",
