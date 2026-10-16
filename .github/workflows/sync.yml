@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "30 0 * * *" # 每日 UTC 00:30（北京时间 08:30）
   workflow_dispatch:
+  issues:
+    types: [opened, edited, closed, reopened] # 【收藏】issue 变化时自动同步
 
 permissions:
   contents: write

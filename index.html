@@ -42,6 +42,38 @@
     font-size: 14px; outline: none; transition: border-color .2s;
   }
   #search:focus { border-color: var(--accent); }
+  #addBtn {
+    padding: 10px 16px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--accent); background: rgba(110,168,254,.12);
+    color: var(--accent); font-size: 14px; white-space: nowrap; transition: background .18s;
+  }
+  #addBtn:hover { background: rgba(110,168,254,.25); }
+  .modal-mask {
+    position: fixed; inset: 0; background: rgba(4,8,16,.66);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .modal-mask.show { display: flex; }
+  .modal {
+    width: 100%; max-width: 420px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 16px; padding: 24px;
+  }
+  .modal h3 { font-size: 17px; margin-bottom: 16px; }
+  .modal label { display: block; color: var(--dim); font-size: 13px; margin: 12px 0 6px; }
+  .modal input {
+    width: 100%; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none;
+  }
+  .modal input:focus { border-color: var(--accent); }
+  .modal .tip { color: var(--gray); font-size: 12px; line-height: 1.7; margin-top: 14px; }
+  .modal .tip a { color: var(--dim); }
+  .modal .btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .modal .btns button {
+    padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 14px;
+    border: 1px solid var(--border); background: transparent; color: var(--dim);
+  }
+  .modal .btns .ok {
+    border-color: var(--accent); background: var(--accent); color: #0b0f17; font-weight: 600;
+  }
   #stats { color: var(--dim); font-size: 13px; }
   #grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -87,10 +119,27 @@
     </div>
     <div class="toolbar">
       <input id="search" type="search" placeholder="搜索站点名称或描述…" autocomplete="off">
+      <button id="addBtn" type="button" title="添加自定义收藏（提交到 GitHub issue，约 1 分钟自动上线）">＋ 添加收藏</button>
       <span id="stats"></span>
     </div>
   </header>
   <main id="grid"><p class="empty">加载中…</p></main>
+  <div class="modal-mask" id="modalMask">
+    <div class="modal" role="dialog" aria-label="添加收藏">
+      <h3>添加收藏</h3>
+      <label>站点名称 *</label>
+      <input id="fName" placeholder="例如：B站" maxlength="40">
+      <label>网址 *</label>
+      <input id="fUrl" placeholder="https://example.com/" maxlength="300">
+      <label>描述（可选）</label>
+      <input id="fDesc" placeholder="一句话说明这个站点是干嘛的" maxlength="120">
+      <p class="tip">点击「去 GitHub 提交」会打开一个预填好的 issue，确认后发布即可。<br>发布约 1 分钟后自动出现在导航站；<b>删除收藏 = 到 GitHub 关闭该 issue</b>。<a id="manageLink" href="#" target="_blank" rel="noopener">管理已有收藏 →</a></p>
+      <div class="btns">
+        <button type="button" id="mCancel">取消</button>
+        <button type="button" class="ok" id="mSubmit">去 GitHub 提交</button>
+      </div>
+    </div>
+  </div>
   <footer>
     数据由 GitHub Actions 每日自动生成 ·
     <a href="https://github.com/pengyuyan29" target="_blank" rel="noopener">GitHub @pengyuyan29</a>
@@ -169,6 +218,7 @@
       ]);
       const d = await r1.json();
       const pages = (d.sites || []).sort((a, b) => (b.pushed_at || '').localeCompare(a.pushed_at || ''));
+      pages.sort((a, b) => (a.status === 'custom' ? 0 : 1) - (b.status === 'custom' ? 0 : 1));
       let custom = [];
       if (r2 && r2.ok) {
         try {
@@ -186,6 +236,36 @@
     }
   }
   load();
+
+  // ===== 添加收藏（issue 驱动）=====
+  const REPO = 'pengyuyan29/pengyuyan29.github.io';
+  const mask = document.getElementById('modalMask');
+  document.getElementById('manageLink').href =
+    `https://github.com/${REPO}/issues?q=is%3Aissue+is%3Aopen+%E3%80%90%E6%94%B6%E8%97%8F%E3%80%91`;
+
+  document.getElementById('addBtn').addEventListener('click', () => {
+    mask.classList.add('show');
+    document.getElementById('fName').focus();
+  });
+  const close = () => mask.classList.remove('show');
+  document.getElementById('mCancel').addEventListener('click', close);
+  mask.addEventListener('click', e => { if (e.target === mask) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+  document.getElementById('mSubmit').addEventListener('click', () => {
+    const name = document.getElementById('fName').value.trim();
+    let url = document.getElementById('fUrl').value.trim();
+    const desc = document.getElementById('fDesc').value.trim();
+    if (!name) return alert('请填写站点名称');
+    if (!/^https?:\/\/.+\..+/.test(url)) return alert('网址需以 http:// 或 https:// 开头');
+    const q = `【收藏】${name}`;
+    const body = desc ? `${url}\n${desc}` : url;
+    window.open(
+      `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(q)}&body=${encodeURIComponent(body)}`,
+      '_blank', 'noopener'
+    );
+    close();
+  });
 </script>
 </body>
 </html>

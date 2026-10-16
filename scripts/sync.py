@@ -146,6 +146,49 @@ def build_site(repo: dict, previous: dict) -> dict:
     }
 
 
+def load_issue_links() -> list:
+    """读取本仓库标题以【收藏】开头的开放 issue，作为自定义收藏链接。
+
+    格式：标题 = 【收藏】站名；正文第一行 = URL，其余行 = 描述（可选）。
+    关闭 issue 即从导航站移除。
+    """
+    items, page = [], 1
+    while True:
+        d = api(f"/repos/{OWNER}/{SELF_REPO}/issues?state=open&per_page=100&page={page}", auth=False)
+        if not d:
+            break
+        items.extend(d)
+        if len(d) < 100:
+            break
+        page += 1
+
+    out = []
+    for it in items:
+        if "pull_request" in it:
+            continue
+        title = (it.get("title") or "").strip()
+        if not title.startswith("【收藏】"):
+            continue
+        name = title.replace("【收藏】", "", 1).strip()
+        lines = [l.strip() for l in (it.get("body") or "").splitlines() if l.strip()]
+        url = next((l for l in lines if l.lower().startswith(("http://", "https://"))), "")
+        if not name or not url:
+            print(f"  skip invalid issue #{it.get('number')}: {title!r}")
+            continue
+        desc = " ".join(l for l in lines if l != url)[:200]
+        out.append({
+            "repo": name,
+            "url": url,
+            "description": desc,
+            "language": None,
+            "topics": [],
+            "pushed_at": None,
+            "status": "custom",
+        })
+    print(f"Loaded {len(out)} custom link(s) from issues")
+    return out
+
+
 def main() -> None:
     previous = load_previous()
     repos = list_repos()
@@ -162,9 +205,9 @@ def main() -> None:
         seen.add(name)
         sites.append(build_site(repo, previous))
 
-    # 兜底：上次存在但这次没扫到的站点，保留并复查状态
+    # 兜底：上次存在但这次没扫到的站点，保留并复查状态（自定义收藏不兜底，随 issue 开关增删）
     for name, old in previous.items():
-        if name not in seen and name != SELF_REPO:
+        if name not in seen and name != SELF_REPO and old.get("status") != "custom":
             old = dict(old)
             old["url"] = try_https(old.get("url", ""))
             ok, _ = head_check(old["url"])
@@ -172,7 +215,16 @@ def main() -> None:
             sites.append(old)
             print(f"  kept from previous data: {name}")
 
+    # 合并自定义收藏（issue 驱动），去重：同一 URL 以自动收录为准
+    issue_links = load_issue_links()
+    known_urls = {s["url"].rstrip("/") for s in sites}
+    for c in issue_links:
+        if c["url"].rstrip("/") not in known_urls:
+            sites.append(c)
+
+    # 两次稳定排序：收藏（issue/links）始终在前，其余按最近更新倒序
     sites.sort(key=lambda s: s["pushed_at"] or "", reverse=True)
+    sites.sort(key=lambda s: s["status"] != "custom")
     data = {
         "updated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sites": sites,
