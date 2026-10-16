@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T14:39:04Z",
+  "updated_at": "2026-10-16T04:46:37Z",
   "sites": [
     {
       "repo": "singbox-config-builder",
@@ -80,7 +80,7 @@
       "language": null,
       "topics": [],
       "pushed_at": "2025-09-29T13:48:19Z",
-      "status": "online"
+      "status": "offline"
     }
   ]
 }
