@@ -1,6 +1,16 @@
 {
-  "updated_at": "2026-10-16T09:43:59Z",
+  "updated_at": "2026-10-16T09:48:40Z",
   "sites": [
+    {
+      "repo": "健康监控",
+      "url": "https://66.202991001.xyz/",
+      "description": "vps状态监控",
+      "language": null,
+      "topics": [],
+      "pushed_at": null,
+      "status": "custom",
+      "cat": "self"
+    },
     {
       "repo": "健康监控",
       "url": "https://66.202991001.xyz/",
@@ -90,7 +100,7 @@
       "language": null,
       "topics": [],
       "pushed_at": "2025-09-29T13:48:19Z",
-      "status": "online"
+      "status": "offline"
     }
   ]
 }
