@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-10-16T09:19:40Z",
+  "updated_at": "2026-10-16T09:23:15Z",
   "sites": [
+    {
+      "repo": "健康监控",
+      "url": "https://66.202991001.xyz/",
+      "description": "",
+      "language": null,
+      "topics": [],
+      "pushed_at": null,
+      "status": "custom"
+    },
     {
       "repo": "测试站点",
       "url": "https://example.com/",
