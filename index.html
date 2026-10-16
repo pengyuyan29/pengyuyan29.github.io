@@ -5,22 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>站点导航 · pengyuyan29</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="pengyuyan29 的 GitHub Pages 站点索引，每日自动同步">
+<meta name="description" content="pengyuyan29 的站点索引：GitHub Pages、自建站与收藏夹，每日自动同步">
+<script>
+  /* 首屏防闪烁：在渲染前确定主题 */
+  (function () {
+    var t = localStorage.getItem('nav-theme');
+    if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
 <style>
   :root {
     --bg: #0b0f17;
+    --bg-glow: #14243f;
     --card: #121a2a;
     --card-hover: #182238;
     --border: #1e2a42;
+    --border-strong: #2c3d63;
     --text: #e6edf6;
     --dim: #8b98ad;
     --accent: #6ea8fe;
+    --accent-soft: rgba(110,168,254,.12);
+    --accent-hover: rgba(110,168,254,.25);
     --green: #3fb96f;
     --gray: #55637a;
+    --mask: rgba(4,8,16,.66);
+    --chip-bg: rgba(110,168,254,.12);
+    --chip-dim-bg: rgba(139,152,173,.1);
+    --input-bg: #0b0f17;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f6fb;
+    --bg-glow: #dbe7fb;
+    --card: #ffffff;
+    --card-hover: #f2f6ff;
+    --border: #e2e8f2;
+    --border-strong: #b9cdf0;
+    --text: #1a2233;
+    --dim: #5b6779;
+    --accent: #2f6fe0;
+    --accent-soft: rgba(47,111,224,.09);
+    --accent-hover: rgba(47,111,224,.18);
+    --green: #1f9d55;
+    --gray: #9aa6b8;
+    --mask: rgba(30,40,60,.35);
+    --chip-bg: rgba(47,111,224,.1);
+    --chip-dim-bg: rgba(91,103,121,.09);
+    --input-bg: #ffffff;
+    --shadow: 0 10px 30px rgba(30,50,90,.12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: radial-gradient(1200px 600px at 80% -10%, #14243f 0%, var(--bg) 55%) fixed;
+    background: radial-gradient(1200px 600px at 80% -10%, var(--bg-glow) 0%, var(--bg) 55%) fixed;
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     min-height: 100vh;
@@ -30,61 +67,49 @@
   .logo { width: 46px; height: 46px; border-radius: 12px; flex: none; }
   header h1 {
     font-size: 32px; font-weight: 700; letter-spacing: 1px;
-    background: linear-gradient(90deg, #6ea8fe, #a6f0e2);
+    background: linear-gradient(90deg, var(--accent), #a6f0e2);
     -webkit-background-clip: text; background-clip: text; color: transparent;
     display: inline-block;
   }
   header .sub { color: var(--dim); margin-top: 8px; font-size: 14px; }
-  .toolbar { display: flex; gap: 12px; align-items: center; margin-top: 24px; flex-wrap: wrap; }
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-top: 24px; flex-wrap: wrap; }
   #search {
-    flex: 1; min-width: 240px; padding: 10px 16px; border-radius: 10px;
+    flex: 1; min-width: 220px; padding: 10px 16px; border-radius: 10px;
     border: 1px solid var(--border); background: var(--card); color: var(--text);
     font-size: 14px; outline: none; transition: border-color .2s;
   }
   #search:focus { border-color: var(--accent); }
+  #addBtn, #themeBtn {
+    padding: 10px 16px; border-radius: 10px; cursor: pointer; font-size: 14px; white-space: nowrap;
+    transition: background .18s, border-color .18s;
+  }
   #addBtn {
-    padding: 10px 16px; border-radius: 10px; cursor: pointer;
-    border: 1px solid var(--accent); background: rgba(110,168,254,.12);
-    color: var(--accent); font-size: 14px; white-space: nowrap; transition: background .18s;
+    border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent);
   }
-  #addBtn:hover { background: rgba(110,168,254,.25); }
-  .modal-mask {
-    position: fixed; inset: 0; background: rgba(4,8,16,.66);
-    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
-  }
-  .modal-mask.show { display: flex; }
-  .modal {
-    width: 100%; max-width: 420px; background: var(--card);
-    border: 1px solid var(--border); border-radius: 16px; padding: 24px;
-  }
-  .modal h3 { font-size: 17px; margin-bottom: 16px; }
-  .modal label { display: block; color: var(--dim); font-size: 13px; margin: 12px 0 6px; }
-  .modal input {
-    width: 100%; padding: 10px 12px; border-radius: 10px; font-size: 14px;
-    border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none;
-  }
-  .modal input:focus { border-color: var(--accent); }
-  .modal .tip { color: var(--gray); font-size: 12px; line-height: 1.7; margin-top: 14px; }
-  .modal .tip a { color: var(--dim); }
-  .modal .btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-  .modal .btns button {
-    padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 14px;
-    border: 1px solid var(--border); background: transparent; color: var(--dim);
-  }
-  .modal .btns .ok {
-    border-color: var(--accent); background: var(--accent); color: #0b0f17; font-weight: 600;
-  }
+  #addBtn:hover { background: var(--accent-hover); }
+  #themeBtn { border: 1px solid var(--border); background: var(--card); color: var(--dim); }
+  #themeBtn:hover { border-color: var(--accent); color: var(--accent); }
   #stats { color: var(--dim); font-size: 13px; }
-  #grid {
+
+  .sec { margin-top: 34px; }
+  .sec:first-child { margin-top: 26px; }
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .sec-head h2 { font-size: 16px; font-weight: 600; letter-spacing: .5px; }
+  .sec-head .bar { width: 4px; height: 16px; border-radius: 2px; background: var(--accent); }
+  .count {
+    font-size: 12px; padding: 1px 9px; border-radius: 99px;
+    background: var(--chip-dim-bg); color: var(--dim);
+  }
+  .sec-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px; margin-top: 24px;
+    gap: 16px;
   }
   .card {
     display: block; text-decoration: none; color: inherit;
     background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 18px 20px; transition: transform .18s, background .18s, border-color .18s;
+    padding: 18px 20px; transition: transform .18s, background .18s, border-color .18s, box-shadow .18s;
   }
-  .card:hover { transform: translateY(-3px); background: var(--card-hover); border-color: #2c3d63; }
+  .card:hover { transform: translateY(-3px); background: var(--card-hover); border-color: var(--border-strong); box-shadow: var(--shadow); }
   .card .row { display: flex; align-items: center; gap: 8px; }
   .card h3 { font-size: 16px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
@@ -95,16 +120,44 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 41px; }
   .chip {
     font-size: 11px; padding: 2px 8px; border-radius: 99px;
-    background: rgba(110,168,254,.12); color: var(--accent); white-space: nowrap;
+    background: var(--chip-bg); color: var(--accent); white-space: nowrap;
   }
-  .chip.dim { background: rgba(139,152,173,.1); color: var(--dim); }
+  .chip.dim { background: var(--chip-dim-bg); color: var(--dim); }
   .meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 8px; }
   .meta time { color: var(--gray); font-size: 12px; }
   .chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-  .empty { color: var(--dim); text-align: center; padding: 60px 0; grid-column: 1/-1; }
+  .empty { color: var(--dim); text-align: center; padding: 60px 0; }
   footer { text-align: center; color: var(--gray); font-size: 12px; margin-top: 48px; }
   footer a { color: var(--dim); text-decoration: none; }
   footer a:hover { color: var(--accent); }
+
+  .modal-mask {
+    position: fixed; inset: 0; background: var(--mask);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .modal-mask.show { display: flex; }
+  .modal {
+    width: 100%; max-width: 420px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow);
+  }
+  .modal h3 { font-size: 17px; margin-bottom: 16px; }
+  .modal label { display: block; color: var(--dim); font-size: 13px; margin: 12px 0 6px; }
+  .modal input, .modal select {
+    width: 100%; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+    border: 1px solid var(--border); background: var(--input-bg); color: var(--text); outline: none;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--accent); }
+  .modal .tip { color: var(--gray); font-size: 12px; line-height: 1.7; margin-top: 14px; }
+  .modal .tip a { color: var(--dim); }
+  .modal .btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .modal .btns button {
+    padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 14px;
+    border: 1px solid var(--border); background: transparent; color: var(--dim);
+  }
+  .modal .btns .ok {
+    border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600;
+  }
+  :root[data-theme="light"] .modal .btns .ok { color: #fff; }
 </style>
 </head>
 <body>
@@ -114,34 +167,42 @@
       <img class="logo" src="favicon.svg" alt="站点导航">
       <div>
         <h1>站点导航</h1>
-        <p class="sub">pengyuyan29 的站点索引 · Pages 每日自动同步 + 自定义收藏</p>
+        <p class="sub">pengyuyan29 的站点索引 · Pages 每日自动同步 + 自定义管理</p>
       </div>
     </div>
     <div class="toolbar">
       <input id="search" type="search" placeholder="搜索站点名称或描述…" autocomplete="off">
-      <button id="addBtn" type="button" title="添加自定义收藏（提交到 GitHub issue，约 1 分钟自动上线）">＋ 添加收藏</button>
+      <button id="addBtn" type="button" title="添加自定义链接（提交到 GitHub issue，约 1 分钟自动上线）">＋ 添加</button>
+      <button id="themeBtn" type="button" title="切换浅色 / 深色">浅色</button>
       <span id="stats"></span>
     </div>
   </header>
   <main id="grid"><p class="empty">加载中…</p></main>
+
   <div class="modal-mask" id="modalMask">
-    <div class="modal" role="dialog" aria-label="添加收藏">
-      <h3>添加收藏</h3>
+    <div class="modal" role="dialog" aria-label="添加链接">
+      <h3>添加链接</h3>
+      <label>分类</label>
+      <select id="fCat">
+        <option value="collect">收藏夹</option>
+        <option value="self">自建站</option>
+      </select>
       <label>站点名称 *</label>
       <input id="fName" placeholder="例如：B站" maxlength="40">
       <label>网址 *</label>
       <input id="fUrl" placeholder="https://example.com/" maxlength="300">
       <label>描述（可选）</label>
       <input id="fDesc" placeholder="一句话说明这个站点是干嘛的" maxlength="120">
-      <p class="tip">点击「去 GitHub 提交」会打开一个预填好的 issue，确认后发布即可。<br>发布约 1 分钟后自动出现在导航站；<b>删除收藏 = 到 GitHub 关闭该 issue</b>。<a id="manageLink" href="#" target="_blank" rel="noopener">管理已有收藏 →</a></p>
+      <p class="tip">点击「去 GitHub 提交」会打开一个预填好的 issue，确认后发布即可。<br>发布约 1 分钟后自动上线；<b>删除 = 到 GitHub 关闭该 issue</b>。<a id="manageLink" href="#" target="_blank" rel="noopener">管理已有链接 →</a></p>
       <div class="btns">
         <button type="button" id="mCancel">取消</button>
         <button type="button" class="ok" id="mSubmit">去 GitHub 提交</button>
       </div>
     </div>
   </div>
+
   <footer>
-    数据由 GitHub Actions 每日自动生成 ·
+    数据由 GitHub Actions 自动生成 ·
     <a href="https://github.com/pengyuyan29" target="_blank" rel="noopener">GitHub @pengyuyan29</a>
   </footer>
 </div>
@@ -155,7 +216,7 @@
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   function relTime(iso) {
-    if (!iso) return '未知';
+    if (!iso) return '';
     const diff = Date.now() - new Date(iso).getTime();
     const m = Math.floor(diff / 60000), h = Math.floor(m / 60), d = Math.floor(h / 24);
     if (d >= 365) return Math.floor(d / 365) + ' 年前';
@@ -173,11 +234,13 @@
     a.target = '_blank';
     a.rel = 'noopener';
     const isCustom = s.status === 'custom';
+    const cat = s.cat === 'self' ? 'self' : 'collect';
     const lang = isCustom
-      ? '<span class="chip">收藏</span>'
+      ? `<span class="chip">${cat === 'self' ? '自建' : '收藏'}</span>`
       : (s.language ? `<span class="chip">${esc(s.language)}</span>` : '');
     const dotCls = isCustom ? 'custom' : (s.status === 'online' ? 'on' : 'off');
-    const dotTitle = isCustom ? '自定义收藏' : (s.status === 'online' ? '在线' : '离线');
+    const dotTitle = isCustom ? '自定义链接' : (s.status === 'online' ? '在线' : '离线');
+    const time = isCustom ? '' : '更新于 ' + relTime(s.pushed_at);
     const topics = (s.topics || []).slice(0, 3)
       .map(t => `<span class="chip dim">${esc(t)}</span>`).join('');
     a.innerHTML = `
@@ -187,19 +250,41 @@
       </div>
       <p>${esc(s.description || '暂无描述')}</p>
       <div class="meta">
-        <time>${isCustom ? '自定义' : '更新于 ' + relTime(s.pushed_at)}</time>
+        <time>${time}</time>
         <div class="chips">${topics}</div>
       </div>`;
     return a;
   }
 
+  function section(title, items) {
+    if (!items.length) return null;
+    const sec = document.createElement('section');
+    sec.className = 'sec';
+    sec.innerHTML = `
+      <div class="sec-head">
+        <span class="bar"></span><h2>${esc(title)}</h2>
+        <span class="count">${items.length}</span>
+      </div>`;
+    const g = document.createElement('div');
+    g.className = 'sec-grid';
+    items.forEach(s => g.appendChild(card(s)));
+    sec.appendChild(g);
+    return sec;
+  }
+
   function render(list) {
     grid.innerHTML = '';
-    if (!list.length) {
-      grid.innerHTML = '<p class="empty">没有匹配的站点</p>';
-      return;
-    }
-    list.forEach(s => grid.appendChild(card(s)));
+    const groups = [
+      ['GitHub Pages', list.filter(s => s.status !== 'custom')],
+      ['自建站', list.filter(s => s.status === 'custom' && s.cat === 'self')],
+      ['收藏夹', list.filter(s => s.status === 'custom' && s.cat !== 'self')],
+    ];
+    let any = false;
+    groups.forEach(([t, items]) => {
+      const sec = section(t, items);
+      if (sec) { grid.appendChild(sec); any = true; }
+    });
+    if (!any) grid.innerHTML = '<p class="empty">没有匹配的站点</p>';
   }
 
   searchEl.addEventListener('input', () => {
@@ -224,12 +309,14 @@
         try {
           custom = (await r2.json() || [])
             .filter(c => c && c.name && c.url)
-            .map(c => ({ repo: c.name, url: c.url, description: c.desc || '', status: 'custom', topics: [], pushed_at: null }));
-        } catch (e) { /* links.json 格式错误时忽略，只显示 Pages 站点 */ }
+            .map(c => ({ repo: c.name, url: c.url, description: c.desc || '', status: 'custom', cat: c.cat === 'self' ? 'self' : 'collect', topics: [], pushed_at: null }));
+        } catch (e) { /* links.json 格式错误时忽略 */ }
       }
       SITES = [...custom, ...pages];
+      const nPages = SITES.filter(s => s.status !== 'custom').length;
+      const nCustom = SITES.length - nPages;
       const t = d.updated_at ? new Date(d.updated_at).toLocaleString('zh-CN') : '—';
-      statsEl.textContent = `${pages.length} 个站点 · ${custom.length} 个收藏 · 同步于 ${t}`;
+      statsEl.textContent = `${nPages} 个站点 · ${nCustom} 个自定义 · 同步于 ${t}`;
       render(SITES);
     } catch (e) {
       grid.innerHTML = '<p class="empty">数据加载失败，请稍后刷新</p>';
@@ -237,11 +324,24 @@
   }
   load();
 
-  // ===== 添加收藏（issue 驱动）=====
+  // ===== 主题切换 =====
+  const themeBtn = document.getElementById('themeBtn');
+  function applyThemeBtn() {
+    themeBtn.textContent = document.documentElement.dataset.theme === 'light' ? '深色' : '浅色';
+  }
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('nav-theme', next);
+    applyThemeBtn();
+  });
+  applyThemeBtn();
+
+  // ===== 添加链接（issue 驱动）=====
   const REPO = 'pengyuyan29/pengyuyan29.github.io';
   const mask = document.getElementById('modalMask');
   document.getElementById('manageLink').href =
-    `https://github.com/${REPO}/issues?q=is%3Aissue+is%3Aopen+%E3%80%90%E6%94%B6%E8%97%8F%E3%80%91`;
+    `https://github.com/${REPO}/issues?q=is%3Aissue+is%3Aopen+%E3%80%90`;
 
   document.getElementById('addBtn').addEventListener('click', () => {
     mask.classList.add('show');
@@ -253,15 +353,16 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
   document.getElementById('mSubmit').addEventListener('click', () => {
+    const cat = document.getElementById('fCat').value;
     const name = document.getElementById('fName').value.trim();
-    let url = document.getElementById('fUrl').value.trim();
+    const url = document.getElementById('fUrl').value.trim();
     const desc = document.getElementById('fDesc').value.trim();
     if (!name) return alert('请填写站点名称');
     if (!/^https?:\/\/.+\..+/.test(url)) return alert('网址需以 http:// 或 https:// 开头');
-    const q = `【收藏】${name}`;
+    const prefix = cat === 'self' ? '【自建】' : '【收藏】';
     const body = desc ? `${url}\n${desc}` : url;
     window.open(
-      `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(q)}&body=${encodeURIComponent(body)}`,
+      `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(prefix + name)}&body=${encodeURIComponent(body)}`,
       '_blank', 'noopener'
     );
     close();

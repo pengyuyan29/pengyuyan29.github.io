@@ -147,10 +147,11 @@ def build_site(repo: dict, previous: dict) -> dict:
 
 
 def load_issue_links() -> list:
-    """读取本仓库标题以【收藏】开头的开放 issue，作为自定义收藏链接。
+    """读取本仓库的开放 issue 作为自定义链接，分为两类：
 
-    格式：标题 = 【收藏】站名；正文第一行 = URL，其余行 = 描述（可选）。
-    关闭 issue 即从导航站移除。
+    标题以【收藏】开头 → 收藏夹（cat=collect，默认）
+    标题以【自建】开头 → 自建站（cat=self）
+    正文第一行 = URL，其余行 = 描述（可选）。关闭 issue 即从导航站移除。
     """
     items, page = [], 1
     while True:
@@ -162,14 +163,16 @@ def load_issue_links() -> list:
             break
         page += 1
 
+    markers = {"【收藏】": "collect", "【自建】": "self"}
     out = []
     for it in items:
         if "pull_request" in it:
             continue
         title = (it.get("title") or "").strip()
-        if not title.startswith("【收藏】"):
+        cat = next((c for p, c in markers.items() if title.startswith(p)), None)
+        if not cat:
             continue
-        name = title.replace("【收藏】", "", 1).strip()
+        name = title[title.index("】") + 1:].strip()
         lines = [l.strip() for l in (it.get("body") or "").splitlines() if l.strip()]
         url = next((l for l in lines if l.lower().startswith(("http://", "https://"))), "")
         if not name or not url:
@@ -184,6 +187,7 @@ def load_issue_links() -> list:
             "topics": [],
             "pushed_at": None,
             "status": "custom",
+            "cat": cat,
         })
     print(f"Loaded {len(out)} custom link(s) from issues")
     return out
