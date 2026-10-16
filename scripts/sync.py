@@ -155,7 +155,7 @@ def load_issue_links() -> list:
     """
     items, page = [], 1
     while True:
-        d = api(f"/repos/{OWNER}/{SELF_REPO}/issues?state=open&per_page=100&page={page}", auth=False)
+        d = api(f"/repos/{OWNER}/{SELF_REPO}/issues?state=open&per_page=100&page={page}", auth=True)
         if not d:
             break
         items.extend(d)

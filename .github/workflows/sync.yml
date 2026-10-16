@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  issues: read
 
 concurrency:
   group: sync-pages-index
