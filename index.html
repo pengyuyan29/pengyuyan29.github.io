@@ -58,6 +58,7 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
   .dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
   .dot.off { background: var(--gray); }
+  .dot.custom { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
   .card p { color: var(--dim); font-size: 13px; line-height: 1.6; margin-top: 10px;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 41px; }
   .chip {
@@ -81,7 +82,7 @@
       <img class="logo" src="favicon.svg" alt="站点导航">
       <div>
         <h1>站点导航</h1>
-        <p class="sub">pengyuyan29 的 GitHub Pages 索引 · 每日自动同步</p>
+        <p class="sub">pengyuyan29 的站点索引 · Pages 每日自动同步 + 自定义收藏</p>
       </div>
     </div>
     <div class="toolbar">
@@ -122,17 +123,22 @@
     a.href = s.url;
     a.target = '_blank';
     a.rel = 'noopener';
-    const lang = s.language ? `<span class="chip">${esc(s.language)}</span>` : '';
+    const isCustom = s.status === 'custom';
+    const lang = isCustom
+      ? '<span class="chip">收藏</span>'
+      : (s.language ? `<span class="chip">${esc(s.language)}</span>` : '');
+    const dotCls = isCustom ? 'custom' : (s.status === 'online' ? 'on' : 'off');
+    const dotTitle = isCustom ? '自定义收藏' : (s.status === 'online' ? '在线' : '离线');
     const topics = (s.topics || []).slice(0, 3)
       .map(t => `<span class="chip dim">${esc(t)}</span>`).join('');
     a.innerHTML = `
       <div class="row">
-        <span class="dot ${s.status === 'online' ? 'on' : 'off'}" title="${s.status === 'online' ? '在线' : '离线'}"></span>
+        <span class="dot ${dotCls}" title="${dotTitle}"></span>
         <h3>${esc(s.repo)}</h3>${lang}
       </div>
       <p>${esc(s.description || '暂无描述')}</p>
       <div class="meta">
-        <time>更新于 ${relTime(s.pushed_at)}</time>
+        <time>${isCustom ? '自定义' : '更新于 ' + relTime(s.pushed_at)}</time>
         <div class="chips">${topics}</div>
       </div>`;
     return a;
@@ -157,11 +163,23 @@
 
   async function load() {
     try {
-      const r = await fetch('sites.json?t=' + Date.now());
-      const d = await r.json();
-      SITES = (d.sites || []).sort((a, b) => (b.pushed_at || '').localeCompare(a.pushed_at || ''));
+      const [r1, r2] = await Promise.all([
+        fetch('sites.json?t=' + Date.now()),
+        fetch('links.json?t=' + Date.now()).catch(() => null),
+      ]);
+      const d = await r1.json();
+      const pages = (d.sites || []).sort((a, b) => (b.pushed_at || '').localeCompare(a.pushed_at || ''));
+      let custom = [];
+      if (r2 && r2.ok) {
+        try {
+          custom = (await r2.json() || [])
+            .filter(c => c && c.name && c.url)
+            .map(c => ({ repo: c.name, url: c.url, description: c.desc || '', status: 'custom', topics: [], pushed_at: null }));
+        } catch (e) { /* links.json 格式错误时忽略，只显示 Pages 站点 */ }
+      }
+      SITES = [...custom, ...pages];
       const t = d.updated_at ? new Date(d.updated_at).toLocaleString('zh-CN') : '—';
-      statsEl.textContent = `${SITES.length} 个站点 · 同步于 ${t}`;
+      statsEl.textContent = `${pages.length} 个站点 · ${custom.length} 个收藏 · 同步于 ${t}`;
       render(SITES);
     } catch (e) {
       grid.innerHTML = '<p class="empty">数据加载失败，请稍后刷新</p>';
