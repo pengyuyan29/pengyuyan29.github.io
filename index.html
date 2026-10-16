@@ -30,6 +30,7 @@
     --green: #3fb96f;
     --gray: #55637a;
     --mask: rgba(4,8,16,.66);
+    --bg-blur: rgba(11,15,23,.85);
     --chip-bg: rgba(110,168,254,.12);
     --chip-dim-bg: rgba(139,152,173,.1);
     --input-bg: #0b0f17;
@@ -50,6 +51,7 @@
     --green: #1f9d55;
     --gray: #9aa6b8;
     --mask: rgba(30,40,60,.35);
+    --bg-blur: rgba(244,246,251,.85);
     --chip-bg: rgba(47,111,224,.1);
     --chip-dim-bg: rgba(91,103,121,.09);
     --input-bg: #ffffff;
@@ -72,7 +74,29 @@
     display: inline-block;
   }
   header .sub { color: var(--dim); margin-top: 8px; font-size: 14px; }
-  .toolbar { display: flex; gap: 10px; align-items: center; margin-top: 24px; flex-wrap: wrap; }
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    margin: 24px -20px 0; padding: 12px 20px 0;
+    background: var(--bg-blur);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  #tabs { display: flex; gap: 8px; margin: 14px 0 12px; flex-wrap: wrap; }
+  .tab {
+    padding: 7px 15px; border-radius: 99px; cursor: pointer; font-size: 13px;
+    border: 1px solid var(--border); background: transparent; color: var(--dim);
+    transition: all .15s;
+  }
+  .tab:hover { color: var(--text); border-color: var(--border-strong); }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .tab .n { opacity: .72; font-size: 11px; margin-left: 4px; }
+  #stats { color: var(--dim); font-size: 13px; }
+
+  #grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px; margin-top: 24px;
+  }
   #search {
     flex: 1; min-width: 220px; padding: 10px 16px; border-radius: 10px;
     border: 1px solid var(--border); background: var(--card); color: var(--text);
@@ -91,19 +115,6 @@
   #themeBtn:hover { border-color: var(--accent); color: var(--accent); }
   #stats { color: var(--dim); font-size: 13px; }
 
-  .sec { margin-top: 34px; }
-  .sec:first-child { margin-top: 26px; }
-  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .sec-head h2 { font-size: 16px; font-weight: 600; letter-spacing: .5px; }
-  .sec-head .bar { width: 4px; height: 16px; border-radius: 2px; background: var(--accent); }
-  .count {
-    font-size: 12px; padding: 1px 9px; border-radius: 99px;
-    background: var(--chip-dim-bg); color: var(--dim);
-  }
-  .sec-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-  }
   .card {
     display: block; text-decoration: none; color: inherit;
     background: var(--card); border: 1px solid var(--border); border-radius: 14px;
@@ -170,11 +181,14 @@
         <p class="sub">pengyuyan29 的站点索引 · Pages 每日自动同步 + 自定义管理</p>
       </div>
     </div>
-    <div class="toolbar">
-      <input id="search" type="search" placeholder="搜索站点名称或描述…" autocomplete="off">
-      <button id="addBtn" type="button" title="添加自定义链接（提交到 GitHub issue，约 1 分钟自动上线）">＋ 添加</button>
-      <button id="themeBtn" type="button" title="切换浅色 / 深色">浅色</button>
-      <span id="stats"></span>
+    <div class="topbar">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="搜索站点名称或描述…" autocomplete="off">
+        <button id="addBtn" type="button" title="添加自定义链接（提交到 GitHub issue，约 1 分钟自动上线）">＋ 添加</button>
+        <button id="themeBtn" type="button" title="切换浅色 / 深色">浅色</button>
+        <span id="stats"></span>
+      </div>
+      <nav id="tabs"></nav>
     </div>
   </header>
   <main id="grid"><p class="empty">加载中…</p></main>
@@ -256,44 +270,51 @@
     return a;
   }
 
-  function section(title, items) {
-    if (!items.length) return null;
-    const sec = document.createElement('section');
-    sec.className = 'sec';
-    sec.innerHTML = `
-      <div class="sec-head">
-        <span class="bar"></span><h2>${esc(title)}</h2>
-        <span class="count">${items.length}</span>
-      </div>`;
-    const g = document.createElement('div');
-    g.className = 'sec-grid';
-    items.forEach(s => g.appendChild(card(s)));
-    sec.appendChild(g);
-    return sec;
-  }
-
   function render(list) {
     grid.innerHTML = '';
-    const groups = [
-      ['GitHub Pages', list.filter(s => s.status !== 'custom')],
-      ['自建站', list.filter(s => s.status === 'custom' && s.cat === 'self')],
-      ['收藏夹', list.filter(s => s.status === 'custom' && s.cat !== 'self')],
-    ];
-    let any = false;
-    groups.forEach(([t, items]) => {
-      const sec = section(t, items);
-      if (sec) { grid.appendChild(sec); any = true; }
-    });
-    if (!any) grid.innerHTML = '<p class="empty">没有匹配的站点</p>';
+    if (!list.length) {
+      grid.innerHTML = '<p class="empty">没有匹配的站点</p>';
+      return;
+    }
+    list.forEach(s => grid.appendChild(card(s)));
   }
 
-  searchEl.addEventListener('input', () => {
+  // ===== 分类标签页 =====
+  const tabsEl = document.getElementById('tabs');
+  const CATS = [['all', '全部'], ['pages', 'GitHub Pages'], ['self', '自建站'], ['collect', '收藏夹']];
+  let activeCat = localStorage.getItem('nav-cat') || 'all';
+  if (!CATS.some(c => c[0] === activeCat)) activeCat = 'all';
+
+  const catOf = s => s.status === 'custom' ? (s.cat === 'self' ? 'self' : 'collect') : 'pages';
+
+  function buildTabs() {
+    tabsEl.innerHTML = '';
+    CATS.forEach(([k, label]) => {
+      const n = k === 'all' ? SITES.length : SITES.filter(s => catOf(s) === k).length;
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tab' + (activeCat === k ? ' active' : '');
+      b.innerHTML = `${label}<span class="n">${n}</span>`;
+      b.addEventListener('click', () => {
+        activeCat = k;
+        localStorage.setItem('nav-cat', k);
+        buildTabs();
+        render(currentList());
+      });
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function currentList() {
     const q = searchEl.value.trim().toLowerCase();
-    render(SITES.filter(s =>
-      !q || s.repo.toLowerCase().includes(q) ||
-      (s.description || '').toLowerCase().includes(q) ||
-      (s.topics || []).some(t => t.toLowerCase().includes(q))));
-  });
+    return SITES.filter(s =>
+      (activeCat === 'all' || catOf(s) === activeCat) &&
+      (!q || s.repo.toLowerCase().includes(q) ||
+        (s.description || '').toLowerCase().includes(q) ||
+        (s.topics || []).some(t => t.toLowerCase().includes(q))));
+  }
+
+  searchEl.addEventListener('input', () => render(currentList()));
 
   async function load() {
     try {
@@ -317,7 +338,8 @@
       const nCustom = SITES.length - nPages;
       const t = d.updated_at ? new Date(d.updated_at).toLocaleString('zh-CN') : '—';
       statsEl.textContent = `${nPages} 个站点 · ${nCustom} 个自定义 · 同步于 ${t}`;
-      render(SITES);
+      buildTabs();
+      render(currentList());
     } catch (e) {
       grid.innerHTML = '<p class="empty">数据加载失败，请稍后刷新</p>';
     }
