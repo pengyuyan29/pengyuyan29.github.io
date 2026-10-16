@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-16T09:40:57Z",
+  "updated_at": "2026-10-16T09:42:10Z",
   "sites": [
     {
       "repo": "健康监控",
@@ -8,7 +8,8 @@
       "language": null,
       "topics": [],
       "pushed_at": null,
-      "status": "custom"
+      "status": "custom",
+      "cat": "collect"
     },
     {
       "repo": "singbox-config-builder",
@@ -89,7 +90,7 @@
       "language": null,
       "topics": [],
       "pushed_at": "2025-09-29T13:48:19Z",
-      "status": "offline"
+      "status": "online"
     }
   ]
 }
