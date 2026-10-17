@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T02:01:19Z",
+  "updated_at": "2026-10-17T02:04:32Z",
   "sites": [
     {
       "repo": "健康监控",
@@ -85,12 +85,30 @@
       "status": "online"
     },
     {
+      "repo": "api-nav",
+      "url": "https://qianshuy99.github.io/api-nav/",
+      "description": "",
+      "language": "HTML",
+      "topics": [],
+      "pushed_at": "2026-08-21T14:14:52Z",
+      "status": "online"
+    },
+    {
       "repo": "pockmon",
       "url": "https://xiyan122.github.io/pockmon/",
       "description": "",
       "language": "Python",
       "topics": [],
       "pushed_at": "2026-08-01T10:27:12Z",
+      "status": "online"
+    },
+    {
+      "repo": "yuheng",
+      "url": "https://qianshuy99.github.io/yuheng/",
+      "description": "一个油猴换肤引擎：外壳是「玉衡」（青瓷绿的悬浮控制器 + 面板），内核是 Dubhe Core（注册 / 匹配 / 注入 / 校验），皮肤是可插拔的主题包。内置一套 Windows XP Luna 主题，用在 Flarum 论坛上。",
+      "language": "JavaScript",
+      "topics": [],
+      "pushed_at": "2026-08-01T03:52:39Z",
       "status": "online"
     },
     {
@@ -101,6 +119,15 @@
       "topics": [],
       "pushed_at": "2026-07-31T02:26:11Z",
       "status": "offline"
+    },
+    {
+      "repo": "awesome-aicue-reader",
+      "url": "https://qianshuy99.github.io/awesome-aicue-reader/",
+      "description": "为言灵工坊（Flarum）深度适配的沉浸式增强阅读器，支持长帖上下文、原站互动与个性布局。",
+      "language": "JavaScript",
+      "topics": [],
+      "pushed_at": "2026-07-28T06:50:19Z",
+      "status": "online"
     },
     {
       "repo": "daily_stock_analysis",
