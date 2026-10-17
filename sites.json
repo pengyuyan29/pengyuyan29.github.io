@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T02:18:31Z",
+  "updated_at": "2026-10-17T02:27:10Z",
   "sites": [
     {
       "repo": "健康监控",
@@ -179,6 +179,16 @@
       "language": "HTML",
       "topics": [],
       "pushed_at": "2022-08-28T13:29:32Z",
+      "status": "online"
+    },
+    {
+      "repo": "musicplayer",
+      "owner": "xiyan122",
+      "url": "http://linxiz.loc.cc/",
+      "description": "音乐播放器（原 xiyan122/musicplayer，已绑定自定义域名）",
+      "language": null,
+      "topics": [],
+      "pushed_at": null,
       "status": "online"
     }
   ]
