@@ -234,6 +234,7 @@ def main() -> None:
             host = urlparse(old.get("url", "")).netloc.lower()
             if host.endswith(".github.io"):
                 old.setdefault("owner", host.split(".")[0])
+            old.setdefault("owner", OWNER)  # 自定义域名等无法从 URL 推断时，默认归主账号
             old["url"] = try_https(old.get("url", ""))
             ok, _ = head_check(old["url"])
             old["status"] = "online" if ok else "offline"
