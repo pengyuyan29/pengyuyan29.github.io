@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T02:04:32Z",
+  "updated_at": "2026-10-17T02:06:55Z",
   "sites": [
     {
       "repo": "健康监控",
@@ -23,6 +23,7 @@
     },
     {
       "repo": "qingqian.github.io",
+      "owner": "pengyuyan29",
       "url": "https://88.202991001.xyz/qingqian.github.io/",
       "description": "",
       "language": null,
@@ -68,6 +69,7 @@
     },
     {
       "repo": "display-tech-intro",
+      "owner": "pengyuyan29",
       "url": "https://88.202991001.xyz/display-tech-intro/",
       "description": "",
       "language": "Python",
@@ -77,6 +79,7 @@
     },
     {
       "repo": "interview-kit",
+      "owner": "xiyan122",
       "url": "https://xiyan122.github.io/interview-kit/",
       "description": "光学工程师/光模块工艺工程师 求职面试工具箱（项目手册 + 知识体系）",
       "language": "HTML",
@@ -86,6 +89,7 @@
     },
     {
       "repo": "api-nav",
+      "owner": "Qianshuy99",
       "url": "https://qianshuy99.github.io/api-nav/",
       "description": "",
       "language": "HTML",
@@ -95,6 +99,7 @@
     },
     {
       "repo": "pockmon",
+      "owner": "xiyan122",
       "url": "https://xiyan122.github.io/pockmon/",
       "description": "",
       "language": "Python",
@@ -104,6 +109,7 @@
     },
     {
       "repo": "yuheng",
+      "owner": "Qianshuy99",
       "url": "https://qianshuy99.github.io/yuheng/",
       "description": "一个油猴换肤引擎：外壳是「玉衡」（青瓷绿的悬浮控制器 + 面板），内核是 Dubhe Core（注册 / 匹配 / 注入 / 校验），皮肤是可插拔的主题包。内置一套 Windows XP Luna 主题，用在 Flarum 论坛上。",
       "language": "JavaScript",
@@ -122,6 +128,7 @@
     },
     {
       "repo": "awesome-aicue-reader",
+      "owner": "Qianshuy99",
       "url": "https://qianshuy99.github.io/awesome-aicue-reader/",
       "description": "为言灵工坊（Flarum）深度适配的沉浸式增强阅读器，支持长帖上下文、原站互动与个性布局。",
       "language": "JavaScript",
@@ -140,6 +147,7 @@
     },
     {
       "repo": "Wechat__editer",
+      "owner": "pengyuyan29",
       "url": "https://88.202991001.xyz/Wechat__editer/",
       "description": "一个基于 Vite + React + TypeScript + Tiptap的公众号文章排版工具：左侧写作编辑，右侧手机预览，内置模板/组件/套版，并支持 自定义主题（JSON / CSS 导入） —— 让你能把「自己的品牌色与版式风格」稳定地应用到预览、复制与导出。",
       "language": "TypeScript",
@@ -149,6 +157,7 @@
     },
     {
       "repo": "xiyan122.github.io",
+      "owner": "xiyan122",
       "url": "https://xiyan122.github.io/",
       "description": "夕颜的小屋",
       "language": "HTML",
@@ -158,6 +167,7 @@
     },
     {
       "repo": "gh-pages-url-shortener",
+      "owner": "xiyan122",
       "url": "https://xiyan122.github.io/gh-pages-url-shortener/",
       "description": "Minimal URL shortener that can be entirely hosted on GitHub pages.",
       "language": "HTML",
