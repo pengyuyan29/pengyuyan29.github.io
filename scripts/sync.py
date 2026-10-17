@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""扫描 OWNER 名下所有开启了 GitHub Pages 的仓库，生成 sites.json 索引数据。
+"""扫描 OWNER 及 EXTRA_OWNERS 名下所有开启了 GitHub Pages 的仓库，生成 sites.json 索引数据。
 
 数据来源（合并去重，尽量保证全量覆盖）：
 1. 带令牌的 search API 与 /users/{OWNER}/repos（受令牌范围限制，但可覆盖可访问的私有仓库）
@@ -15,6 +15,9 @@ import urllib.request
 from urllib.parse import urlparse
 
 OWNER = "pengyuyan29"
+# 友情账号：其公开的 GitHub Pages 仓库也会被一并收录（与 OWNER 自己的仓库同等处理，增删只需改这一行）
+EXTRA_OWNERS = ["xiyan122"]
+SCAN_OWNERS = [OWNER] + [o for o in EXTRA_OWNERS if o and o.lower() != OWNER.lower()]
 SELF_REPO = f"{OWNER}.github.io"  # 本索引站自身，不收录
 CUSTOM_DOMAIN = "88.202991001.xyz"  # 导航站域名，HTTPS 由 Cloudflare 边缘证书提供，始终可用
 TOKEN = os.environ.get("GH_TOKEN", "")
@@ -40,40 +43,41 @@ def api(path: str, auth: bool = True, timeout: int = 30):
 
 
 def list_repos() -> dict:
-    by_name = {}
+    by_key = {}
 
     def merge(items):
         for r in items or []:
-            name = r.get("name")
-            if not name:
+            full = (r.get("full_name") or "").strip()
+            if not full:
                 continue
             # 私有仓库信息优先（匿名接口看不到私有仓库，不会互相覆盖）
-            if name in by_name and by_name[name].get("visibility") == "public" \
+            if full in by_key and by_key[full].get("visibility") == "public" \
                     and r.get("visibility") == "private":
-                by_name[name] = r
+                by_key[full] = r
             else:
-                by_name.setdefault(name, r)
+                by_key.setdefault(full, r)
 
-    # 1) 带令牌的 search（可能被令牌范围过滤）
-    d = api(f"/search/repositories?q=user:{OWNER}&per_page=100", auth=True)
-    merge(d.get("items") if d else None)
+    for owner in SCAN_OWNERS:
+        # 1) 带令牌的 search（可能被令牌范围过滤）
+        d = api(f"/search/repositories?q=user:{owner}&per_page=100", auth=True)
+        merge(d.get("items") if d else None)
 
-    # 2) 带令牌的仓库列表（可覆盖令牌可访问的私有仓库）
-    page = 1
-    while True:
-        batch = api(f"/users/{OWNER}/repos?per_page=100&page={page}", auth=True)
-        if not batch:
-            break
-        merge(batch)
-        if len(batch) < 100:
-            break
-        page += 1
+        # 2) 带令牌的仓库列表（可覆盖令牌可访问的私有仓库）
+        page = 1
+        while True:
+            batch = api(f"/users/{owner}/repos?per_page=100&page={page}", auth=True)
+            if not batch:
+                break
+            merge(batch)
+            if len(batch) < 100:
+                break
+            page += 1
 
-    # 3) 匿名 search：完整公开仓库索引，不受令牌范围影响
-    d = api(f"/search/repositories?q=user:{OWNER}&per_page=100", auth=False)
-    merge(d.get("items") if d else None)
+        # 3) 匿名 search：完整公开仓库索引，不受令牌范围影响
+        d = api(f"/search/repositories?q=user:{owner}&per_page=100", auth=False)
+        merge(d.get("items") if d else None)
 
-    return by_name
+    return by_key
 
 
 def load_previous() -> dict:
@@ -113,21 +117,23 @@ def try_https(url: str) -> str:
 
 def build_site(repo: dict, previous: dict) -> dict:
     name = repo["name"]
+    owner = (repo.get("owner") or {}).get("login") or OWNER
+    is_user_site = name.lower() == f"{owner.lower()}.github.io"
 
-    # 地址优先级：Pages API 规范地址 > 默认地址
-    url = f"https://{OWNER}.github.io/{name}/"
-    pages = api(f"/repos/{OWNER}/{name}/pages", auth=True)
+    # 地址优先级：Pages API 规范地址 > 默认地址（用户站挂根路径，其余为项目子路径）
+    url = f"https://{owner}.github.io/" if is_user_site else f"https://{owner}.github.io/{name}/"
+    pages = api(f"/repos/{owner}/{name}/pages", auth=True)
     if pages and pages.get("html_url"):
         url = pages["html_url"]
 
     # 若 Pages API 不可用，通过重定向识别自定义域名（仅当重定向目标确实可访问时才采用）
     if not pages:
         ok, final = head_check(url)
-        github_host = f"{OWNER}.github.io"
+        github_host = f"{owner}.github.io"
         if ok and final and urlparse(final).netloc.lower() != github_host:
             ok3, _ = head_check(url)
             if not ok3:
-                url = f"https://{github_host}/{name}/"
+                url = f"https://{github_host}/" if is_user_site else f"https://{github_host}/{name}/"
 
     # 统一升级为 HTTPS（未开启 Enforce HTTPS 时 Pages API 返回 http://，
     # 而页面密码加密依赖 HTTPS 下的 crypto.subtle）
