@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 
 OWNER = "pengyuyan29"
 # 友情账号：其公开的 GitHub Pages 仓库也会被一并收录（与 OWNER 自己的仓库同等处理，增删只需改这一行）
-EXTRA_OWNERS = ["xiyan122"]
+EXTRA_OWNERS = ["xiyan122", "Qianshuy99"]
 SCAN_OWNERS = [OWNER] + [o for o in EXTRA_OWNERS if o and o.lower() != OWNER.lower()]
 SELF_REPO = f"{OWNER}.github.io"  # 本索引站自身，不收录
 CUSTOM_DOMAIN = "88.202991001.xyz"  # 导航站域名，HTTPS 由 Cloudflare 边缘证书提供，始终可用
