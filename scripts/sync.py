@@ -77,6 +77,17 @@ def list_repos() -> dict:
         d = api(f"/search/repositories?q=user:{owner}&per_page=100", auth=False)
         merge(d.get("items") if d else None)
 
+        # 4) 匿名仓库列表：完整公开仓库清单（搜索接口被限流时仍能覆盖全部公开仓库）
+        page = 1
+        while True:
+            batch = api(f"/users/{owner}/repos?per_page=100&page={page}", auth=False)
+            if not isinstance(batch, list) or not batch:
+                break
+            merge(batch)
+            if len(batch) < 100:
+                break
+            page += 1
+
     return by_key
 
 
@@ -220,6 +231,9 @@ def main() -> None:
     for name, old in previous.items():
         if name not in seen and name != SELF_REPO and old.get("status") != "custom":
             old = dict(old)
+            host = urlparse(old.get("url", "")).netloc.lower()
+            if host.endswith(".github.io"):
+                old.setdefault("owner", host.split(".")[0])
             old["url"] = try_https(old.get("url", ""))
             ok, _ = head_check(old["url"])
             old["status"] = "online" if ok else "offline"
