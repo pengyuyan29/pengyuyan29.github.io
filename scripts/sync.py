@@ -17,6 +17,11 @@ from urllib.parse import urlparse
 OWNER = "pengyuyan29"
 # 友情账号：其公开的 GitHub Pages 仓库也会被一并收录（与 OWNER 自己的仓库同等处理，增删只需改这一行）
 EXTRA_OWNERS = ["xiyan122", "Qianshuy99"]
+# 手动补充站点：自动扫描发现不了的（如仓库已删除/改名、仅剩 Pages 自定义域名跳转）在这里登记
+EXTRA_SITES = [
+    {"repo": "musicplayer", "owner": "xiyan122", "url": "http://linxiz.loc.cc/",
+     "description": "音乐播放器（原 xiyan122/musicplayer，已绑定自定义域名）"},
+]
 SCAN_OWNERS = [OWNER] + [o for o in EXTRA_OWNERS if o and o.lower() != OWNER.lower()]
 SELF_REPO = f"{OWNER}.github.io"  # 本索引站自身，不收录
 CUSTOM_DOMAIN = "88.202991001.xyz"  # 导航站域名，HTTPS 由 Cloudflare 边缘证书提供，始终可用
@@ -240,6 +245,25 @@ def main() -> None:
             old["status"] = "online" if ok else "offline"
             sites.append(old)
             print(f"  kept from previous data: {name}")
+
+    # 合并手动补充站点（自动扫描发现不了的），URL 去重后照常探测在线状态
+    known_urls = {s["url"].rstrip("/") for s in sites}
+    for e in EXTRA_SITES:
+        url = try_https(e.get("url", ""))
+        if url.rstrip("/") in known_urls:
+            continue
+        ok, _ = head_check(url)
+        sites.append({
+            "repo": e["repo"],
+            "owner": e.get("owner", OWNER),
+            "url": url,
+            "description": e.get("description", ""),
+            "language": None,
+            "topics": [],
+            "pushed_at": None,
+            "status": "online" if ok else "offline",
+        })
+        print(f"  extra site: {e['repo']} -> {url} ({'online' if ok else 'offline'})")
 
     # 合并自定义收藏（issue 驱动），去重：同一 URL 以自动收录为准
     issue_links = load_issue_links()
