@@ -143,6 +143,7 @@ def build_site(repo: dict, previous: dict) -> dict:
 
     return {
         "repo": name,
+        "owner": owner,
         "url": url,
         "description": repo.get("description") or previous.get(name, {}).get("description", ""),
         "language": repo.get("language"),

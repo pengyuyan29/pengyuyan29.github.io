@@ -252,6 +252,7 @@
     const lang = isCustom
       ? `<span class="chip">${cat === 'self' ? '自建' : '收藏'}</span>`
       : (s.language ? `<span class="chip">${esc(s.language)}</span>` : '');
+    const src = isCustom ? '' : `<span class="chip dim">@${esc(ownerOf(s))}</span>`;
     const dotCls = isCustom ? 'custom' : (s.status === 'online' ? 'on' : 'off');
     const dotTitle = isCustom ? '自定义链接' : (s.status === 'online' ? '在线' : '离线');
     const time = isCustom ? '' : '更新于 ' + relTime(s.pushed_at);
@@ -260,7 +261,7 @@
     a.innerHTML = `
       <div class="row">
         <span class="dot ${dotCls}" title="${dotTitle}"></span>
-        <h3>${esc(s.repo)}</h3>${lang}
+        <h3>${esc(s.repo)}</h3>${lang}${src}
       </div>
       <p>${esc(s.description || '暂无描述')}</p>
       <div class="meta">
@@ -279,17 +280,30 @@
     list.forEach(s => grid.appendChild(card(s)));
   }
 
-  // ===== 分类标签页 =====
+  // ===== 分类标签页（来源 = GitHub 用户名，动态生成） =====
   const tabsEl = document.getElementById('tabs');
-  const CATS = [['all', '全部'], ['pages', 'GitHub Pages'], ['self', '自建站'], ['collect', '收藏夹']];
   let activeCat = localStorage.getItem('nav-cat') || 'all';
-  if (!CATS.some(c => c[0] === activeCat)) activeCat = 'all';
 
-  const catOf = s => s.status === 'custom' ? (s.cat === 'self' ? 'self' : 'collect') : 'pages';
+  const ownerOf = s => s.owner || 'pengyuyan29';   // 兼容旧数据
+  const catOf = s => s.status === 'custom'
+    ? (s.cat === 'self' ? '自建站' : '收藏夹')
+    : 'u:' + ownerOf(s).toLowerCase();
+
+  function cats() {
+    const list = [['all', '全部']];
+    const seen = new Set();
+    SITES.filter(s => s.status !== 'custom').forEach(s => {
+      const k = catOf(s);
+      if (!seen.has(k)) { seen.add(k); list.push([k, ownerOf(s)]); }
+    });
+    list.push(['自建站', '自建站'], ['收藏夹', '收藏夹']);
+    if (!list.some(c => c[0] === activeCat)) activeCat = 'all';
+    return list;
+  }
 
   function buildTabs() {
     tabsEl.innerHTML = '';
-    CATS.forEach(([k, label]) => {
+    cats().forEach(([k, label]) => {
       const n = k === 'all' ? SITES.length : SITES.filter(s => catOf(s) === k).length;
       const b = document.createElement('button');
       b.type = 'button';
