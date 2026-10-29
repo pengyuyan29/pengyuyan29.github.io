@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T05:59:16Z",
+  "updated_at": "2026-10-29T06:06:06Z",
   "sites": [
     {
       "repo": "健康监控",
@@ -24,12 +24,12 @@
     {
       "repo": "qingqian.github.io",
       "owner": "pengyuyan29",
-      "url": "https://88.202991001.xyz/qingqian.github.io/",
+      "url": "https://pengyuyan29.github.io/qingqian.github.io/",
       "description": "",
       "language": null,
       "topics": [],
       "pushed_at": "2026-10-16T19:28:00Z",
-      "status": "offline"
+      "status": "online"
     },
     {
       "repo": "singbox-config-builder",
@@ -74,12 +74,12 @@
     {
       "repo": "display-tech-intro",
       "owner": "pengyuyan29",
-      "url": "https://88.202991001.xyz/display-tech-intro/",
+      "url": "https://pengyuyan29.github.io/display-tech-intro/",
       "description": "",
       "language": "Python",
       "topics": [],
       "pushed_at": "2026-09-21T15:33:43Z",
-      "status": "offline"
+      "status": "online"
     },
     {
       "repo": "interview-kit",
@@ -154,12 +154,12 @@
     {
       "repo": "Wechat__editer",
       "owner": "pengyuyan29",
-      "url": "https://88.202991001.xyz/Wechat__editer/",
+      "url": "https://pengyuyan29.github.io/Wechat__editer/",
       "description": "一个基于 Vite + React + TypeScript + Tiptap的公众号文章排版工具：左侧写作编辑，右侧手机预览，内置模板/组件/套版，并支持 自定义主题（JSON / CSS 导入） —— 让你能把「自己的品牌色与版式风格」稳定地应用到预览、复制与导出。",
       "language": "TypeScript",
       "topics": [],
       "pushed_at": "2026-02-07T02:47:30Z",
-      "status": "offline"
+      "status": "online"
     },
     {
       "repo": "xiyan122.github.io",
